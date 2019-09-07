@@ -21,6 +21,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/roboto_regular"
         android:singleLine="true"
         android:inputType="number"
         android:hint="grams Carbohyrates:"

@@ -1,6 +1,9 @@
 package com.pennapps.insulin;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 
 
 import java.util.ArrayList;
@@ -47,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         void addFragment(Fragment fragment) {
             fragmentList.add(fragment);
         }
+    }
+
+    public void launchMain(View v) {
+        Intent main = new Intent(this,MainActivity.class);
+        String email = ((EditText)findViewById(R.id.et_email)).getText().toString();
+        main.putExtra("email", email);
+        startActivity(main);
     }
 
 }

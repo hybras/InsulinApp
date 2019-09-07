@@ -1,11 +1,15 @@
 package com.pennapps.insulin;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.material.snackbar.Snackbar;
 
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -16,17 +20,23 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ApiRequest extends AsyncTask<String, Void, String> {
+public class ApiRequest extends AsyncTask<Void, Void, Integer> {
 
-    final View view;
-    ApiRequest (View v) {
-        this.view = v;
+    private final String request = "https://api.nutritionix.com/v1_1/search/taco?results=0%3A1&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id%2Cnf_total_carbohydrate&appId=1a226fac&appKey=89b309422edc2c2d3086983c18af602f";
+
+
+
+    private final MainActivity main;
+
+    ApiRequest (MainActivity main) {
+
+        this.main = main;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected Integer doInBackground(Void... strings) {
         try {
-            URL url = new URL(strings[0]);
+            URL url = new URL(request);
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             StringBuilder stringBuilder = new StringBuilder(600);
@@ -37,31 +47,22 @@ public class ApiRequest extends AsyncTask<String, Void, String> {
             }
 
             urlConnection.disconnect();
+            try {
+                JSONObject full = new JSONObject(stringBuilder.toString());
+                return full.getJSONArray("hits").getJSONObject(0).getJSONObject("fields").getInt("nf_total_carbohydrate");
+            } catch (JSONException js) {
+                return null;
+            }
 
-            return stringBuilder.toString();
-
+        } catch (MalformedURLException ml) {
+            return null;
+        } catch (IOException io) {
+            return null;
         }
-        catch (MalformedURLException ml) { return null;}
-        catch (IOException io) {return null;}
     }
 
     @Override
-    protected void onPostExecute(String result) {
-        Log.d("output",result);
-
-
-        try {
-            JSONObject full = new JSONObject(result);
-            String carbs = full.getJSONArray("hits").getJSONObject(0).getJSONObject("fields").getString("nf_total_carbohydrate");
-            Snackbar.make(view, carbs, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        } catch (Exception e) {
-            Snackbar.make(view, "Failed", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
-
-
-
-
+    protected void onPostExecute(Integer carbs) {
+        main.addPoint(carbs);
     }
 }

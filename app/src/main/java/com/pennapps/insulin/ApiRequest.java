@@ -1,14 +1,11 @@
 package com.pennapps.insulin;
 
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;

@@ -16,18 +16,12 @@
         android:layout_marginRight="20dp"
         android:padding="15dp"
         >
-        <RadioButton android:id="@+id/food1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rapid Acting Insulin"/>
-        <RadioButton android:id="@+id/food2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Regular Acting Insulin"/>
-        <RadioButton android:id="@+id/food3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Regular Acting Insulin"/>
     </RadioGroup>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Enter"
+        android:onClick="enter"/>
 
 </LinearLayout>

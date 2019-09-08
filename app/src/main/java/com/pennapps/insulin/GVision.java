@@ -144,7 +144,6 @@ public class GVision {
 
                 for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
                     options.add(annotation.getDescription());
-
                 }
             }
             return options;

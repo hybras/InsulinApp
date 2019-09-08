@@ -31,7 +31,7 @@
         android:clickable="true"
         android:focusable="true"
         android:tint="@color/colorPrimary"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:onClick="sendRequest"
         app:srcCompat="@android:drawable/ic_input_add" />

@@ -1,5 +1,6 @@
 package com.pennapps.insulin;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         graph = (GraphView) findViewById(R.id.graph);
 
         TextView targetLabel = findViewById(R.id.TDD);
-        targetLabel.setText("Target Insulin: " + Integer.toString(TDD) + " grams");
+        targetLabel.setText("Total Daily Dose: " + Integer.toString(TDD) + " grams");
 
         EditText currentCarbs = findViewById(R.id.currentCarbs);
         currentCarbs.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
@@ -115,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendRequest(View view) {
-        ApiRequest req = new ApiRequest(this);
-        req.execute();
+        Intent rec = new Intent(getApplicationContext(),RecImage.class);
+        startActivity(rec);
     }
 
     @Override

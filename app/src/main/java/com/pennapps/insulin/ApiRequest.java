@@ -17,26 +17,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.function.IntConsumer;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ApiRequest extends AsyncTask<Void, Void, Integer> {
+public class ApiRequest extends AsyncTask<String, Void, Integer> {
 
-    private final String request = "https://api.nutritionix.com/v1_1/search/taco?results=0%3A1&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id%2Cnf_total_carbohydrate&appId=1a226fac&appKey=89b309422edc2c2d3086983c18af602f";
+    private final String request = "https://api.nutritionix.com/v1_1/search/%s?results=0%3A1&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id%2Cnf_total_carbohydrate&appId=1a226fac&appKey=89b309422edc2c2d3086983c18af602f";
 
 
 
-    private final MainActivity main;
+    private final IntConsumer eat;
 
-    ApiRequest (MainActivity main) {
-
-        this.main = main;
+    ApiRequest (IntConsumer eat) {
+        this.eat = eat;
     }
 
     @Override
-    protected Integer doInBackground(Void... strings) {
+    protected Integer doInBackground(String... strings) {
         try {
-            URL url = new URL(request);
+            URL url = new URL(String.format(request, strings[0]));
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             StringBuilder stringBuilder = new StringBuilder(600);
@@ -51,18 +51,18 @@ public class ApiRequest extends AsyncTask<Void, Void, Integer> {
                 JSONObject full = new JSONObject(stringBuilder.toString());
                 return full.getJSONArray("hits").getJSONObject(0).getJSONObject("fields").getInt("nf_total_carbohydrate");
             } catch (JSONException js) {
-                return null;
+                return 0;
             }
 
         } catch (MalformedURLException ml) {
-            return null;
+            return 0;
         } catch (IOException io) {
-            return null;
+            return 0;
         }
     }
 
     @Override
     protected void onPostExecute(Integer carbs) {
-        main.addPoint(carbs);
+       eat.accept(carbs);
     }
 }

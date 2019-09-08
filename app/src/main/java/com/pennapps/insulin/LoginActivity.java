@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 
 import java.util.ArrayList;
@@ -55,7 +56,22 @@ public class LoginActivity extends AppCompatActivity {
     public void launchMain(View v) {
         Intent main = new Intent(this,MainActivity.class);
         String email = ((EditText)findViewById(R.id.et_email)).getText().toString();
+        Integer TDD = Integer.parseInt(((EditText)findViewById(R.id.dose)).getText().toString());
+        Integer targetBG = Integer.parseInt(((EditText)findViewById(R.id.targetBG)).getText().toString());
         main.putExtra("email", email);
+        main.putExtra("TDD", TDD);
+        main.putExtra("targetBG", targetBG);
+        RadioGroup rg = findViewById(R.id.insulinType);
+        boolean insType = false;
+        switch (rg.getCheckedRadioButtonId()) {
+            case R.id.rapidInsulin:
+                insType = true;
+                break;
+            case R.id.regularInsulin:
+                insType = false;
+                break;
+        }
+        main.putExtra("insulinType", insType);
         startActivity(main);
     }
 

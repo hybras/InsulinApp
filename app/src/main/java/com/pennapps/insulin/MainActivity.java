@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     protected LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
     protected int cuando = 0;
 
+    int TDD;
+    int targetBG;
+    boolean insulinType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Insulin: " + getIntent().getStringExtra("email"));
 //        setSupportActionBar(toolbar);
+        TDD = getIntent().getIntExtra("TDD", 50);
+        targetBG = getIntent().getIntExtra("targetBG", 120);
+        insulinType = getIntent().getBooleanExtra("insulinType", false);
 
         graph = (GraphView) findViewById(R.id.graph);
 

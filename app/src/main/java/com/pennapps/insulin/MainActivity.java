@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -28,9 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
     protected int cuando = 0;
 
-    int TDD;
-    int targetBG;
-    boolean insulinType;
+
+    Meal meal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +42,29 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Insulin: " + getIntent().getStringExtra("email"));
 //        setSupportActionBar(toolbar);
-        TDD = getIntent().getIntExtra("TDD", 50);
-        targetBG = getIntent().getIntExtra("targetBG", 120);
-        insulinType = getIntent().getBooleanExtra("insulinType", false);
+        int TDD = getIntent().getIntExtra("TDD", 50);
+        int targetBG = getIntent().getIntExtra("targetBG", 120);
+        boolean insulinType = getIntent().getBooleanExtra("insulinType", false);
+
+        meal = new Meal(insulinType, TDD, targetBG);
 
         graph = (GraphView) findViewById(R.id.graph);
+
+        TextView targetLabel = findViewById(R.id.TDD);
+        targetLabel.setText("Target Insulin: " + Integer.toString(TDD) + " grams");
+
+        EditText currentCarbs = findViewById(R.id.currentCarbs);
+        currentCarbs.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
+        currentCarbs.setOnEditorActionListener((view,key,event) -> {
+            String asString = currentCarbs.getText().toString();
+            meal.setCurrentBG(Integer.parseInt(asString));
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+            Snackbar.make(view, "You need to take " + meal.insulin() + " grams of insulin", Snackbar.LENGTH_LONG).show();
+            return true;
+        });
 
 
         graph.addSeries(series);
@@ -56,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         carbsField = (EditText) findViewById(R.id.carbs);
         carbsField.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
         carbsField.setOnEditorActionListener((view,key,event) -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
             addPoint();
             return true;
 

@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendRequest(View view) {
         Intent rec = new Intent(getApplicationContext(),RecImage.class);
+        rec.putExtra("insulinType", meal.insulinType);
+        rec.putExtra("TDD", meal.TDD);
+        rec.putExtra("targetBG", meal.targetBG);
         startActivity(rec);
     }
 

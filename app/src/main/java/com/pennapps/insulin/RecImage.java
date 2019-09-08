@@ -8,6 +8,9 @@ import android.provider.MediaStore;
 import android.os.Bundle;
 import android.view.View;
 
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -31,6 +34,29 @@ public class RecImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options);
         OpenCam();
+        EditText foodText = findViewById(R.id.foodChoice);
+        foodText.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
+        foodText.setOnEditorActionListener((view,key,event) -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+            String foodString = foodText.getText().toString();
+            ApiRequest food = new ApiRequest(
+                    (i) -> {
+                        int TDD = getIntent().getIntExtra("TDD", 50);
+                        int targetBG = getIntent().getIntExtra("targetBG", 120);
+                        boolean insulinType = getIntent().getBooleanExtra("insulinType", false);
+                        Meal m = new Meal(insulinType,TDD,targetBG);
+                        m.setMealCHO(i);
+                        m.setCurrentBG(50);
+                        int insulin = m.insulin();
+                        Snackbar.make(getCurrentFocus(), "You need " + insulin + " grams insulin",Snackbar.LENGTH_LONG).show();
+                    }
+            );
+            food.execute(foodString);
+            return  true;
+        });
     }
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -61,32 +87,5 @@ public class RecImage extends AppCompatActivity {
         onActivityResult(REQUEST_IMAGE_CAPTURE,RESULT_OK,null);
     }
 
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            RadioGroup rg = findViewById(R.id.foodChoice);
-            int i = 0;
-//            try {
-                for (String label : new String[]{"peas","pie","pasta"}) {
-                    RadioButton button = new RadioButton(getApplicationContext());
-                    button.setText(label);
-                    rg.addView(button, i++);
-                }
-//            } catch (IOException io) {
-//            }
-
-
-        }
-    }
-
-    public void enter(View view) {
-        RadioGroup rg = findViewById(R.id.foodChoice);
-        RadioButton rad = findViewById(rg.getCheckedRadioButtonId());
-        String selected = rad.getText().toString();
-        Snackbar.make(view, selected + " has " + 50 + " grams of carbs", Snackbar.LENGTH_LONG).show();
-//        ApiRequest fin = new ApiRequest((carbs -> Snackbar.make(view, "This meal has " + carbs + " grams of carbs", Snackbar.LENGTH_LONG).show()));
-//        fin.execute(selected);
-    }
 
 }

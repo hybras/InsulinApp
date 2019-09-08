@@ -1,9 +1,9 @@
 package com.pennapps.insulin;
 
 public class Meal {
-    final private boolean insulinType;
-    final private int TDD;
-    final private int targetBG;
+    final boolean insulinType;
+    final int TDD;
+    final int targetBG;
     private int actualBG;
     private int mealCHO;
 

@@ -23,9 +23,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class ApiRequest extends AsyncTask<String, Void, Integer> {
 
-    private final String request = "https://api.nutritionix.com/v1_1/search/%s?results=0%3A1&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id%2Cnf_total_carbohydrate&appId=1a226fac&appKey=89b309422edc2c2d3086983c18af602f";
-
-
+    private final String request = "https://api.nutritionix.com/v1_1/search/ITEM?results=0%3A1&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id%2Cnf_total_carbohydrate&appId=1a226fac&appKey=89b309422edc2c2d3086983c18af602f";
 
     private final IntConsumer eat;
 
@@ -36,7 +34,7 @@ public class ApiRequest extends AsyncTask<String, Void, Integer> {
     @Override
     protected Integer doInBackground(String... strings) {
         try {
-            URL url = new URL(String.format(request, strings[0]));
+            URL url = new URL(request.replace("ITEM",strings[0]));
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             StringBuilder stringBuilder = new StringBuilder(600);

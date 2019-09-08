@@ -7,21 +7,35 @@
     android:layout_height="match_parent"
     tools:context=".RecImage">
 
-    <RadioGroup
+    <EditText
         android:id="@+id/foodChoice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="50dp"
+        android:hint="Food"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
         android:padding="15dp"
-        >
-    </RadioGroup>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:inputType="textAutoCorrect"
         android:fontFamily="@font/roboto_regular"
-        android:text="Enter"
-        android:onClick="enter"/>
+        android:background="@drawable/et_custom"
+        android:textSize="15sp" />
+
+<!--    <RadioGroup-->
+<!--        android:id="@+id/foodChoice"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        android:padding="15dp"-->
+<!--        >-->
+<!--    </RadioGroup>-->
+<!--    <Button-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/roboto_regular"-->
+<!--        android:text="Enter"-->
+<!--        android:onClick="enter"/>-->
 
 </LinearLayout>

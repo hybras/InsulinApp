@@ -26,7 +26,6 @@ public class RecImage extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private static File lastPhoto = null;

@@ -122,9 +122,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GVision {
-    public static void detectLabels(String filePath, PrintStream out) throws Exception, IOException
+    public static ArrayList<String> detectLabels(String filePath) throws IOException
     {
         List<AnnotateImageRequest> requests = new ArrayList<>();
+        ArrayList<String> options = new ArrayList<>();
 
         ByteString imgBytes = ByteString.readFrom(new FileInputStream(filePath));
 
@@ -139,16 +140,16 @@ public class GVision {
             List<AnnotateImageResponse> responses = response.getResponsesList();
 
             for (AnnotateImageResponse res : responses) {
-                if (res.hasError()) {
-                    out.printf("Error: %s\n", res.getError().getMessage());
-                    return;
-                }
+                if (res.hasError()) {}
 
-                // For full list of available annotations, see http://g.co/cloud/vision/docs
                 for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-                    annotation.getAllFields().forEach((k, v) -> out.printf("%s : %s\n", k, v.toString()));
+                    options.add(annotation.getDescription());
+
                 }
             }
+            return options;
         }
-}}
+    }
+}
+
 

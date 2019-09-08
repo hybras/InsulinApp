@@ -49,10 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
         meal = new Meal(insulinType, TDD, targetBG);
 
-        graph = (GraphView) findViewById(R.id.graph);
+        graph = findViewById(R.id.graph);
 
-        TextView targetLabel = findViewById(R.id.TDD);
-        targetLabel.setText("Total Daily Dose: " + Integer.toString(TDD) + " grams");
+        TextView targetLabel = findViewById(R.id.info);
+        String infoString = "Total Daily Dose: " + TDD + " grams"
+                + ", Sensitivity: " + meal.calcCF()
+                + ", CHO Ratio: " + meal.calcCHO();
+        targetLabel.setText(infoString);
 
         EditText currentCarbs = findViewById(R.id.currentCarbs);
         currentCarbs.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
@@ -63,28 +66,59 @@ public class MainActivity extends AppCompatActivity {
             if(imm.isAcceptingText()) { // verify if the soft keyboard is open
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
-            Snackbar.make(view, "You need to take " + meal.insulin() + " grams of insulin", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "You need to take " + meal.insulin() + " grams of insulin", Snackbar.LENGTH_INDEFINITE).show();
+            TextView insulinLabel = findViewById(R.id.gramsInsulin);
+            insulinLabel.setText("Take " + Integer.toString(meal.insulin()) + " grams of insulin");
+            insulinLabel.setVisibility(View.VISIBLE);
             return true;
         });
 
 
-        graph.addSeries(series);
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(cuando);
-
-
-        carbsField = (EditText) findViewById(R.id.carbs);
+        carbsField = findViewById(R.id.carbs);
         carbsField.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
         carbsField.setOnEditorActionListener((view,key,event) -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             if(imm.isAcceptingText()) { // verify if the soft keyboard is open
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
-            addPoint();
+            try {
+                addPoint(Integer.parseInt(carbsField.getText().toString()));
+            } catch (NumberFormatException nf) {}
             return true;
 
         });
+
+        EditText foodText = findViewById(R.id.foodChoice);
+        foodText.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
+        foodText.setOnEditorActionListener((view,key,event) -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+            String foodString = foodText.getText().toString();
+            ApiRequest food = new ApiRequest(
+                    (i) -> {
+                        meal.setMealCHO(i);
+                        try {
+                            meal.setCurrentBG(Integer.parseInt(currentCarbs.getText().toString()));
+                        } catch (NumberFormatException nf) {
+                            meal.setCurrentBG(50);
+                        }
+                        int insulin = meal.insulin();
+                        TextView insulinLabel = findViewById(R.id.gramsInsulin);
+                        insulinLabel.setText("Take " + Integer.toString(insulin) + " grams of insulin");
+                        insulinLabel.setVisibility(View.VISIBLE);
+                        Snackbar.make(getCurrentFocus(), "You need " + insulin + " grams insulin",Snackbar.LENGTH_LONG).show();
+                    }
+            );
+            food.execute(foodString);
+            return  true;
+        });
+
+        graph.addSeries(series);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(cuando);
 
         series.setTitle("Sugar Consumed");
         series.setDrawBackground(true);
@@ -95,32 +129,11 @@ public class MainActivity extends AppCompatActivity {
         series.setAnimated(true);
     }
 
-    protected void addPoint() {
-        try {
-            final int carbs = Integer.parseInt(carbsField.getText().toString());
-            DataPoint latest = new DataPoint(cuando++, carbs);
-            graph.getViewport().setMaxX(cuando);
-            series.appendData(latest, false, 10);
+    protected void addPoint(int carbs) {
+        DataPoint latest = new DataPoint(cuando++, carbs);
+        graph.getViewport().setMaxX(cuando);
+        series.appendData(latest, false, 10);
 
-
-
-        } catch (NumberFormatException nfe) {}
-
-    }
-
-    protected void addPoint(final int carbs) {
-            DataPoint latest = new DataPoint(cuando++, carbs);
-            graph.getViewport().setMaxX(cuando);
-            series.appendData(latest, false, 10);
-
-    }
-
-    public void sendRequest(View view) {
-        Intent rec = new Intent(getApplicationContext(),RecImage.class);
-        rec.putExtra("insulinType", meal.insulinType);
-        rec.putExtra("TDD", meal.TDD);
-        rec.putExtra("targetBG", meal.targetBG);
-        startActivity(rec);
     }
 
     @Override

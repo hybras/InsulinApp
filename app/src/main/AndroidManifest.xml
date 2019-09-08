@@ -25,12 +25,6 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity
-            android:name=".RecImage"
-            android:label="FindCarbs"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

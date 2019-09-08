@@ -57,7 +57,7 @@ public class Meal {
     }
 
     public int insulin() {
-        return calcCarbCoverage() + calcBloodSugarCorrection();
+        return Math.max(calcCarbCoverage() + calcBloodSugarCorrection(),0);
     }
 
 }

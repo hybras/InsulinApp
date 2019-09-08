@@ -56,5 +56,9 @@ public class Meal {
         return (int) Math.ceil((actualBG - targetBG)/calcCF());
     }
 
+    public int insulin() {
+        return calcCarbCoverage() + calcBloodSugarCorrection();
+    }
+
 }
 

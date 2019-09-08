@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import androidx.fragment.app.Fragment;
 
@@ -31,8 +32,23 @@ public class LoginFragment extends Fragment {
 
     public void launchMain(View v) {
         Intent main = new Intent(getActivity(),MainActivity.class);
-        String email = ((EditText)getActivity().findViewById(R.id.et_email)).getText().toString();
+        String email = ((EditText)getView().findViewById(R.id.et_email)).getText().toString();
+        Integer TDD = Integer.parseInt(((EditText)getView().findViewById(R.id.dose)).getText().toString());
+        Integer targetBG = Integer.parseInt(((EditText)getView().findViewById(R.id.targetBG)).getText().toString());
         main.putExtra("email", email);
+        main.putExtra("TDD", TDD);
+        main.putExtra("targetBG", targetBG);
+        RadioGroup rg = getView().findViewById(R.id.insulinType);
+        boolean insType = false;
+        switch (rg.getCheckedRadioButtonId()) {
+            case R.id.rapidInsulin:
+                insType = true;
+                break;
+            case R.id.regularInsulin:
+                insType = false;
+                break;
+        }
+        main.putExtra("insulinType", insType);
         startActivity(main);
     }
 

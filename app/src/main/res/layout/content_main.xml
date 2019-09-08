@@ -10,7 +10,8 @@
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="10dp"
         android:layout_height="200dip"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/graph" />
@@ -25,7 +26,30 @@
         android:fontFamily="@font/roboto_regular"
         android:singleLine="true"
         android:inputType="number"
-        android:hint="grams Carbohyrates:"
+        android:hint="Meal Carbohyrates:"
         android:id="@+id/carbs"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/carbs"
+        android:fontFamily="@font/roboto_regular"
+        android:singleLine="true"
+        android:inputType="number"
+        android:hint="Current Blood Glu:"
+        android:id="@+id/currentCarbs"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/roboto_regular"
+        android:singleLine="true"
+        android:inputType="number"
+        android:id="@+id/TDD"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

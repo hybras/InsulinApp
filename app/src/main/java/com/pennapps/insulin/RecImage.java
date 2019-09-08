@@ -20,24 +20,18 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 
 public class RecImage extends AppCompatActivity {
-    private String[] labels=null;
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AssetManager ass = getAssets();
-        try (Scanner read = new Scanner(ass.open("labels.txt"))){
-            labels = new String[38];
-            for(int i=0;read.hasNext();i++)
-                labels[i] = read.nextLine();
-        } catch (IOException io) {}
     }
 
 
@@ -46,10 +40,6 @@ public class RecImage extends AppCompatActivity {
     private static File lastPhoto = null;
 
     public void OpenCam(View view) {
-        //ImageView img = findViewById(R.id.thumbnail);
-        //TextView descriptor = findViewById(R.id.your_thumbnail);
-        //img.setVisibility(View.INVISIBLE);
-        //descriptor.setVisibility(View.INVISIBLE);
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -77,6 +67,7 @@ public class RecImage extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap imageBitmap = BitmapFactory.decodeFile(lastPhoto.getAbsolutePath());
+            String base64 = Base64.getEncoder().encodeToString(Files.readAllBytes(lastPhoto.toPath());
 
         }
     }
